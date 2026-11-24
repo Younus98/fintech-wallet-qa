@@ -3,28 +3,24 @@ import pytest
 
 # ---------- Account creation ----------
 
-@pytest.mark.xfail(reason="BUG-01: empty owner accepted", strict=True)
 def test_empty_owner_is_rejected(client):
     response = client.post("/accounts", json={"owner": ""})
 
     assert response.status_code == 422
 
 
-@pytest.mark.xfail(reason="BUG-02: invalid currency code accepted", strict=True)
 def test_invalid_currency_code_is_rejected(client):
     response = client.post("/accounts", json={"owner": "Alice", "currency": "JPN"})
 
     assert response.status_code == 422
 
 
-@pytest.mark.xfail(reason="BUG-03: empty currency accepted", strict=True)
 def test_empty_currency_is_rejected(client):
     response = client.post("/accounts", json={"owner": "Alice", "currency": ""})
 
     assert response.status_code == 422
 
 
-@pytest.mark.xfail(reason="BUG-04: unknown fields silently ignored", strict=True)
 def test_unknown_field_is_rejected(client):
     response = client.post("/accounts", json={"owner": "Alice", "balance": "1000.00"})
 
@@ -33,7 +29,6 @@ def test_unknown_field_is_rejected(client):
 
 # ---------- Deposit ----------
 
-@pytest.mark.xfail(reason="BUG-05: deposit currency ignored", strict=True)
 def test_deposit_in_other_currency_is_rejected(client, make_account):
     account_id = make_account(currency="EUR")
 

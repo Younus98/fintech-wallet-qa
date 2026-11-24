@@ -1,8 +1,9 @@
 from decimal import Decimal
+from typing import Literal
 from uuid import uuid4
 
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, Field
 
 app = FastAPI(title="Mini Wallet API")
 
@@ -10,8 +11,10 @@ accounts = {}
 
 
 class AccountCreate(BaseModel):
-    owner: str
-    currency: str = "EUR"
+    model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
+
+    owner: str = Field(min_length=1)
+    currency: Literal["EUR", "USD", "GBP", "JPY"] = "EUR"
 
 
 class Account(BaseModel):
@@ -41,10 +44,13 @@ def get_account(account_id: str) -> Account:
 
 
 class Deposit(BaseModel):
+    model_config = ConfigDict(extra="forbid")
     amount: Decimal
 
 
 class Transfer(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    
     from_account_id: str
     to_account_id: str
     amount: Decimal
